@@ -1,0 +1,114 @@
+package Exercise3;
+
+import lejos.nxt.SensorPort;
+import lejos.nxt.LightSensor;
+import lejos.robotics.Color;
+import lejos.nxt.Button;
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.MotorPort;
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.util.Delay;
+
+public class PartOnePartTwo {
+
+	private final int wheelDiameter = 55;
+	private final int trackWidth    = 160;
+	private       int threshold;
+	
+	private LightSensor lSens;
+	private LightSensor rSens;
+	
+	private NXTRegulatedMotor lMotor;
+	private NXTRegulatedMotor rMotor;
+	private DifferentialPilot dPilot;
+	
+	public static void main(String[] args) {
+		
+		PartOnePartTwo p1p2 = new PartOnePartTwo();
+		
+		p1p2.lMotor = new NXTRegulatedMotor(MotorPort.A);
+		p1p2.rMotor = new NXTRegulatedMotor(MotorPort.B);
+		p1p2.dPilot = new DifferentialPilot(p1p2.wheelDiameter, p1p2.trackWidth, p1p2.lMotor, p1p2.rMotor);
+		
+		p1p2.lSens = new LightSensor(SensorPort.S1);
+		p1p2.rSens = new LightSensor(SensorPort.S2);
+		
+		p1p2.calibrate();
+		
+		Button.waitForAnyPress();
+		
+		Delay.msDelay(500);
+		
+		while(!Button.ENTER.isDown()) {
+			
+			p1p2.run();
+			
+		}
+		
+	}
+	
+	private void run() {
+		
+		this.dPilot.setTravelSpeed(200);
+		
+		if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() > this.threshold) {
+			
+			System.out.println("Straight");
+			System.out.println(lSens.getLightValue());
+			System.out.println(rSens.getLightValue());
+			this.dPilot.forward();
+			
+		} else if (this.lSens.getLightValue() <= this.threshold && this.rSens.getLightValue() > this.threshold) {
+			
+			System.out.println("Left");
+			this.dPilot.stop();
+			System.out.println(lSens.getLightValue());
+			System.out.println(rSens.getLightValue());
+			this.dPilot.rotate(15);
+			
+		} else if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() <= this.threshold) {
+			
+			System.out.println("Right");
+			this.dPilot.stop();
+			System.out.println(lSens.getLightValue());
+			System.out.println(rSens.getLightValue());
+			this.dPilot.rotate(-15);
+			
+		} else {
+			
+			System.out.println("Junction hit");
+			
+			/*
+			this.dPilot.stop();			
+			this.dPilot.rotate(30);
+			
+			run();
+			
+			System.out.println("Backwards");
+			this.dPilot.stop();
+			System.out.println(lSens.getLightValue());
+			System.out.println(rSens.getLightValue());
+			this.dPilot.travel(-100);
+			*/
+			
+		}
+		
+	}
+	
+	private void calibrate() {
+		
+		System.out.println("Threshold reading 1");
+		Button.waitForAnyPress();
+		int takeOne = this.lSens.getLightValue();
+		System.out.println("Reading 1 complete");
+		
+		System.out.println("Threshold reading 2");
+		Button.waitForAnyPress();
+		int takeTwo = this.rSens.getLightValue();
+		System.out.println("Reading 2 complete");
+		
+		this.threshold = (takeOne + takeTwo) / 2 + 2;
+		System.out.println("Threshold: " + this.threshold);
+	}
+
+}
