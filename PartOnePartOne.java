@@ -73,21 +73,21 @@ private void travelWithProportionalControl(OpticalDistanceSensor ods) {
 
 private double distanceToSpeed(int distance) {
 
-        if (distance > this.maxDistance) {
+        if (distance > this.maxDistance) {  
 
-                return 600f;
+                return 600f; //maximum speed if over maxDistance
 
 		} else if (distance >= (this.minDistance - 25) && distance <= (this.minDistance + 25)) {
 
-        	return 0f;
+        	return 0f; //no movement if +- 2.5cm of minDistance
 
 		} else if (distance < this.minDistance) {
 
-        	return -(600f * (distance / (this.maxDistance - this.minDistance))) * 5;
+        	return -(600f * (distance / (this.maxDistance - this.minDistance))) * 5; //*5 going backwards is quicker than fowards
 
 		} else {
 
-	        return (600f * (distance / (this.maxDistance - this.minDistance)));
+	        return (600f * (distance / (this.maxDistance - this.minDistance))); //Otherwise travel with proportional control
 
         }
 
