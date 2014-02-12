@@ -25,6 +25,8 @@ public class PartTwo {
 	
 	private Random rand;
 	
+	private boolean atJunction;
+	
 	public static void main(String[] args) {
 		
 		PartTwo p2 = new PartTwo();
@@ -37,6 +39,8 @@ public class PartTwo {
 		p2.rSens = new LightSensor(SensorPort.S2);
 		
 		p2.rand = new Random();
+		
+		p2.atJunction = false;
 		
 		p2.calibrate();
 		
@@ -54,9 +58,9 @@ public class PartTwo {
 	
 	private void run() {
 		
-		this.dPilot.setTravelSpeed(50);
+		this.dPilot.setTravelSpeed(150);
 		
-		if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() > this.threshold) {
+		if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() > this.threshold && this.atJunction == false) {
 			
 			System.out.println("Straight");
 			System.out.println(lSens.getLightValue());
@@ -64,7 +68,7 @@ public class PartTwo {
 			this.dPilot.forward();
 			//this.dPilot.steer(0);
 			
-		} else if (this.lSens.getLightValue() <= this.threshold && this.rSens.getLightValue() > this.threshold) {
+		} else if (this.lSens.getLightValue() <= this.threshold && this.rSens.getLightValue() > this.threshold && this.atJunction == false) {
 			
 			System.out.println("Left");
 			//this.dPilot.stop();
@@ -73,7 +77,7 @@ public class PartTwo {
 			this.dPilot.rotate(10);
 			//this.dPilot.steer(200, 15);
 			
-		} else if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() <= this.threshold) {
+		} else if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() <= this.threshold && this.atJunction == false) {
 			
 			System.out.println("Right");
 			//this.dPilot.stop();
@@ -85,25 +89,29 @@ public class PartTwo {
 		} else {
 			
 			System.out.println("Junction hit");
-			
+			this.atJunction = true;
 			this.dPilot.stop();
 			this.dPilot.travel(70);
 			
 			if (this.rand.nextDouble() > 0.5f) {
 				
-				this.dPilot.rotate(90);
+				this.dPilot.rotate(100);
 				//this.dPilot.steer(200, 90);
 				
 			} else if (this.rand.nextDouble() < 0.5f) {
 				
-				this.dPilot.rotate(-90);
+				this.dPilot.rotate(-100);
 				//this.dPilot.steer(-200, 90);
 				
 			} else {
 				
-				System.out.println("Jackpot!");
+				System.out.println("Do a barrel roll!");
+				this.dPilot.rotate(200);
+				this.dPilot.rotate(200);
 				
-			}				
+			}
+			
+			this.atJunction = false;
 			
 			/*
 			this.dPilot.stop();			
