@@ -37,7 +37,7 @@ public class PartOnePartTwo {
 		
 		Button.waitForAnyPress();
 		
-		Delay.msDelay(500);
+		Delay.msDelay(500);//to prevent initial button press from tripping Button.ENTER.isDown
 		
 		while(!Button.ENTER.isDown()) {
 			
@@ -47,6 +47,10 @@ public class PartOnePartTwo {
 		
 	}
 	
+	/**
+	Detects if light value returned by the light sensors and changes the direction depending 
+	if one or both sensors are triggered.
+	*/
 	private void run() {
 		
 		this.dPilot.setTravelSpeed(300);
@@ -102,6 +106,9 @@ public class PartOnePartTwo {
 		
 	}
 	
+	/**
+	Calibrates initial threshold value of the two light sensors
+	*/
 	private void calibrate() {
 		
 		System.out.println("Threshold reading 1");
@@ -114,7 +121,7 @@ public class PartOnePartTwo {
 		int takeTwo = this.rSens.getLightValue();
 		System.out.println("Reading 2 complete");
 		
-		this.threshold = (takeOne + takeTwo) / 2 + 2;
+		this.threshold = (takeOne + takeTwo) / 2 + 2; //leeway for the threshold value
 		System.out.println("Threshold: " + this.threshold);
 	}
 
