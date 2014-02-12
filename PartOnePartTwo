@@ -49,30 +49,37 @@ public class PartOnePartTwo {
 	
 	private void run() {
 		
-		this.dPilot.setTravelSpeed(200);
+		this.dPilot.setTravelSpeed(300);
 		
-		if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() > this.threshold) {
+		if (this.lSens.getLightValue() > this.threshold 
+				&& this.rSens.getLightValue() > this.threshold) {
 			
 			System.out.println("Straight");
 			System.out.println(lSens.getLightValue());
 			System.out.println(rSens.getLightValue());
+			
+			//this.dPilot.setTravelSpeed(200);
 			this.dPilot.forward();
 			
-		} else if (this.lSens.getLightValue() <= this.threshold && this.rSens.getLightValue() > this.threshold) {
+		} else if (this.lSens.getLightValue() <= this.threshold 
+				&& this.rSens.getLightValue() > this.threshold) {
 			
 			System.out.println("Left");
-			this.dPilot.stop();
 			System.out.println(lSens.getLightValue());
 			System.out.println(rSens.getLightValue());
-			this.dPilot.rotate(15);
 			
-		} else if (this.lSens.getLightValue() > this.threshold && this.rSens.getLightValue() <= this.threshold) {
+			//this.dPilot.setTravelSpeed(100);
+			this.dPilot.arc(0, 15, false);
+			
+		} else if (this.lSens.getLightValue() > this.threshold 
+				&& this.rSens.getLightValue() <= this.threshold) {
 			
 			System.out.println("Right");
-			this.dPilot.stop();
 			System.out.println(lSens.getLightValue());
 			System.out.println(rSens.getLightValue());
-			this.dPilot.rotate(-15);
+			
+			//this.dPilot.setTravelSpeed(100);
+			this.dPilot.arc(0, -15, false);
 			
 		} else {
 			
