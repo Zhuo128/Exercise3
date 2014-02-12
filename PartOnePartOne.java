@@ -5,6 +5,7 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.Button;
 import lejos.nxt.addon.OpticalDistanceSensor;
 
+
 public class PartOnePartOne {
 
         private final int    wheelDiameter = 55;
@@ -33,6 +34,9 @@ public static void main(String[] args) {
 
 	}
 
+/**
+ * Constructs a new OpticalDistanceSensor object constantly checks the distance from objects
+*/
 private void run() {
 
         OpticalDistanceSensor ods = new OpticalDistanceSensor(SensorPort.S3);
@@ -45,6 +49,12 @@ private void run() {
 
 }
 
+/**
+ * Method changes movement of robot depending on speed 
+ * speed is set by another method which requires distance
+ * obtained by ods.getDistance();
+ * @param ods Infrared sensor or Distance sensor
+*/
 private void travelWithProportionalControl(OpticalDistanceSensor ods) {
 
 	int    distance = ods.getDistance();
@@ -71,23 +81,29 @@ private void travelWithProportionalControl(OpticalDistanceSensor ods) {
 
 }
 
+/**
+ * Sets the speed of the robot depending on the distance input into the method
+ * @param distance The distance the robot is to an onject
+*/
 private double distanceToSpeed(int distance) {
 
         if (distance > this.maxDistance) {
 
-                return 600f;
+                return 600f; //max speed if distance detected > maxDistance
 
 		} else if (distance >= (this.minDistance - 25) && distance <= (this.minDistance + 25)) {
 
-        	return 0f;
+        	return 0f; //0 speed or stop if within configurable range
 
 		} else if (distance < this.minDistance) {
 
         	return -(600f * (distance / (this.maxDistance - this.minDistance))) * 5;
+        	//reverse proportional control so it goes backwards if it's too close to an object
 
 		} else {
 
 	        return (600f * (distance / (this.maxDistance - this.minDistance)));
+	        //otherwise travel with proportional control
 
         }
 
